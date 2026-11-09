@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:16
+    container_name: stockcontrol-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-stockcontrol}
+      POSTGRES_USER: ${POSTGRES_USER:-stockcontrol}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-stockcontrol}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - stockcontrol-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-stockcontrol} -d ${POSTGRES_DB:-stockcontrol}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  stockcontrol-pgdata:

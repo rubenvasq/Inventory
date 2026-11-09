@@ -1,0 +1,32 @@
+# === Entorno / secretos ===
+.env
+*.local
+
+# === Backend (Java / Maven) ===
+backend/target/
+*.class
+*.jar
+!backend/.mvn/wrapper/maven-wrapper.jar
+backend/.mvn/.gradle-enterprise/
+backend/logs/
+
+# === Frontend (Node) ===
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# === IDE / editor ===
+.idea/
+*.iml
+.vscode/
+*.swp
+.DS_Store
+
+# === Docker ===
+# (volúmenes gestionados por docker, nada que ignorar aquí por ahora)
+
+# === Datos locales ===
+/*.xlsx

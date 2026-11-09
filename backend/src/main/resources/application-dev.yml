@@ -1,0 +1,17 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        # Muestra el SQL generado durante el desarrollo.
+        show_sql: true
+
+# Mas detalle en el endpoint de salud durante desarrollo.
+management:
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    org.flywaydb: info
+    org.hibernate.SQL: debug
