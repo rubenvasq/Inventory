@@ -81,6 +81,8 @@ export interface Movement {
   previousStock: number
   newStock: number
   note: string | null
+  projectId: number | null
+  projectName: string | null
   createdAt: string
 }
 
@@ -88,6 +90,90 @@ export interface MovementRequest {
   type: MovementType
   quantity: number
   note?: string | null
+}
+
+/** Pagina devuelta por los listados paginados del backend. */
+export interface Page<T> {
+  content: T[]
+  page: number
+  size: number
+  totalElements: number
+  totalPages: number
+}
+
+/** Filtros de busqueda de productos (paginados en el servidor). */
+export interface ProductFilters {
+  search?: string
+  categoryId?: number
+  lowStock?: boolean
+  page?: number
+  size?: number
+}
+
+/** Filtros de busqueda de movimientos (paginados en el servidor). */
+export interface MovementFilters {
+  product?: string
+  type?: MovementType
+  from?: string
+  to?: string
+  page?: number
+  size?: number
+}
+
+export type ProjectStatus = 'PLANNED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED'
+
+export interface ProjectAssignment {
+  id: number
+  productId: number
+  productSku: string
+  productName: string
+  unit: string
+  assignedQuantity: number
+  deliveredQuantity: number
+  returnedQuantity: number
+  pendingQuantity: number
+  createdAt: string
+  updatedAt: string
+}
+
+export interface Project {
+  id: number
+  name: string
+  client: string
+  status: ProjectStatus
+  startDate: string | null
+  endDate: string | null
+  notes: string | null
+  assignments: ProjectAssignment[]
+  createdAt: string
+  updatedAt: string
+}
+
+export interface ProjectRequest {
+  name: string
+  client: string
+  status?: ProjectStatus | null
+  startDate?: string | null
+  endDate?: string | null
+  notes?: string | null
+}
+
+export interface AssignmentRequest {
+  productId: number
+  quantity: number
+}
+
+export interface ProjectMaterialRequest {
+  productId: number
+  quantity: number
+  note?: string | null
+}
+
+export interface ProjectFilters {
+  search?: string
+  status?: ProjectStatus
+  page?: number
+  size?: number
 }
 
 export type Role = 'ADMIN' | 'OPERADOR'

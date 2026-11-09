@@ -44,9 +44,28 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/actuator/health", "/actuator/info").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        // Registrar movimientos de inventario (entradas, salidas y
+                        // ajustes) y entregar/devolver material a proyectos:
+                        // ADMIN u OPERADOR.
+                        .requestMatchers(HttpMethod.POST, "/api/products/*/movements").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/projects/*/deliveries",
+                                "/api/projects/*/returns").authenticated()
+                        // Crear y editar catalogos (productos, categorias,
+                        // proveedores) y gestionar proyectos y sus asignaciones
+                        // de material: solo ADMIN.
+                        .requestMatchers(HttpMethod.POST, "/api/products", "/api/categories",
+                                "/api/suppliers", "/api/projects").hasRole("ADMIN")
+                        .requestMatchers("/api/projects/*/assignments/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/products/**", "/api/categories/**",
+                                "/api/suppliers/**", "/api/projects/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/products/**", "/api/categories/**",
+                                "/api/suppliers/**", "/api/projects/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/products/**", "/api/categories/**",
+                                "/api/suppliers/**", "/api/projects/**").hasRole("ADMIN")
                         // Solo ADMIN administra usuarios.
                         .requestMatchers("/api/users/**").hasRole("ADMIN")
-                        // El resto de la API requiere autenticacion (ADMIN u OPERADOR).
+                        // El resto de la API (consultas, dashboard, ...) requiere
+                        // autenticacion (ADMIN u OPERADOR).
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll())
                 .exceptionHandling(ex -> ex

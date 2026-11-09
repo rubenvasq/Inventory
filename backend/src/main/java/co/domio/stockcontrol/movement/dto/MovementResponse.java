@@ -17,9 +17,15 @@ public record MovementResponse(
         int previousStock,
         int newStock,
         String note,
+        Long projectId,
+        String projectName,
         OffsetDateTime createdAt) {
 
     public static MovementResponse from(StockMovement movement) {
+        return from(movement, null);
+    }
+
+    public static MovementResponse from(StockMovement movement, String projectName) {
         var product = movement.getProduct();
         return new MovementResponse(
                 movement.getId(),
@@ -31,6 +37,8 @@ public record MovementResponse(
                 movement.getPreviousStock(),
                 movement.getNewStock(),
                 movement.getNote(),
+                movement.getProjectId(),
+                projectName,
                 movement.getCreatedAt());
     }
 }

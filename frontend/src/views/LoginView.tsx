@@ -27,9 +27,9 @@ export function LoginView() {
     <div className="login-screen">
       <form className="login-card" onSubmit={submit}>
         <div className="brand login-brand">
-          <span className="brand-mark">SC</span>
+          <span className="brand-mark">KX</span>
           <div>
-            <strong>StockControl</strong>
+            <strong>Kardex</strong>
             <small>DOMIO</small>
           </div>
         </div>

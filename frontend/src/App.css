@@ -612,6 +612,76 @@
   flex: 1;
 }
 
+/* ---------- Filtros y paginación ---------- */
+.filter-search {
+  min-width: 220px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.row-inactive td {
+  opacity: 0.55;
+}
+
+/* ---------- Proyectos ---------- */
+.project-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--surface-2);
+  border-radius: var(--radius);
+  margin-bottom: 18px;
+  font-size: 14px;
+}
+
+.project-summary > div {
+  display: flex;
+  align-items: center;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.modal-footer-inner {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.tag-status-planned {
+  background: rgba(154, 163, 178, 0.15);
+  color: var(--muted);
+}
+
+.tag-status-progress {
+  background: rgba(72, 143, 224, 0.16);
+  color: #6ea8e0;
+}
+
+.tag-status-done {
+  background: rgba(48, 164, 108, 0.15);
+  color: var(--ok);
+}
+
+.tag-status-cancelled {
+  background: rgba(229, 72, 77, 0.15);
+  color: var(--danger);
+}
+
 /* ========================================================================
    Animaciones
    ======================================================================== */

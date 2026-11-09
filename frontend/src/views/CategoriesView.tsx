@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { categoriesApi } from '../api/endpoints'
 import { errorMessage, fieldErrors } from '../api/formError'
+import { useAuth } from '../auth/AuthContext'
 import type { Category, CategoryRequest } from '../api/types'
 import { Field } from '../components/Field'
 import { Modal } from '../components/Modal'
@@ -10,6 +11,7 @@ const EMPTY: CategoryRequest = { name: '', description: '', active: true }
 
 export function CategoriesView() {
   const toast = useToast()
+  const { isAdmin } = useAuth()
   const [items, setItems] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState<Category | null>(null)
@@ -42,9 +44,11 @@ export function CategoriesView() {
     <section>
       <div className="view-header">
         <h1>Categorías</h1>
-        <button className="btn btn-primary" onClick={() => setCreating(true)}>
-          + Nueva categoría
-        </button>
+        {isAdmin && (
+          <button className="btn btn-primary" onClick={() => setCreating(true)}>
+            + Nueva categoría
+          </button>
+        )}
       </div>
 
       {loading ? (
@@ -72,12 +76,16 @@ export function CategoriesView() {
                   </span>
                 </td>
                 <td className="col-actions">
-                  <button className="btn btn-sm" onClick={() => setEditing(c)}>
-                    Editar
-                  </button>
-                  <button className="btn btn-sm btn-danger" onClick={() => remove(c)}>
-                    Eliminar
-                  </button>
+                  {isAdmin && (
+                    <>
+                      <button className="btn btn-sm" onClick={() => setEditing(c)}>
+                        Editar
+                      </button>
+                      <button className="btn btn-sm btn-danger" onClick={() => remove(c)}>
+                        Eliminar
+                      </button>
+                    </>
+                  )}
                 </td>
               </tr>
             ))}

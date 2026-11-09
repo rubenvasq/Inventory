@@ -1,6 +1,7 @@
 import { http } from './client'
 import type {
   AppUser,
+  AssignmentRequest,
   AuthUser,
   Category,
   CategoryRequest,
@@ -9,14 +10,33 @@ import type {
   DashboardSummary,
   LoginRequest,
   Movement,
+  MovementFilters,
   MovementRequest,
-  MovementType,
+  Page,
   Product,
+  ProductFilters,
   ProductRequest,
+  Project,
+  ProjectAssignment,
+  ProjectFilters,
+  ProjectMaterialRequest,
+  ProjectRequest,
   Supplier,
   SupplierRequest,
   UpdateUserRequest,
 } from './types'
+
+/** Convierte filtros opcionales en query string (sin pares vacios). */
+function query(filters: Record<string, unknown>): string {
+  const params = new URLSearchParams()
+  for (const [key, value] of Object.entries(filters)) {
+    if (value !== undefined && value !== null && value !== '' && value !== false) {
+      params.set(key, String(value))
+    }
+  }
+  const qs = params.toString()
+  return qs ? `?${qs}` : ''
+}
 
 export const authApi = {
   login: (body: LoginRequest) => http.post<AuthUser>('/auth/login', body),
@@ -45,12 +65,13 @@ export const suppliersApi = {
 }
 
 export const productsApi = {
-  list: (categoryId?: number) =>
-    http.get<Product[]>(`/products${categoryId ? `?categoryId=${categoryId}` : ''}`),
+  search: (filters: ProductFilters) => http.get<Page<Product>>(`/products${query({ ...filters })}`),
   lowStock: () => http.get<Product[]>('/products/low-stock'),
   get: (id: number) => http.get<Product>(`/products/${id}`),
   create: (body: ProductRequest) => http.post<Product>('/products', body),
   update: (id: number, body: ProductRequest) => http.put<Product>(`/products/${id}`, body),
+  archive: (id: number) => http.patch<Product>(`/products/${id}/archive`),
+  restore: (id: number) => http.patch<Product>(`/products/${id}/restore`),
   remove: (id: number) => http.delete<void>(`/products/${id}`),
 }
 
@@ -60,9 +81,25 @@ export const dashboardApi = {
 }
 
 export const movementsApi = {
-  list: (type?: MovementType) =>
-    http.get<Movement[]>(`/movements${type ? `?type=${type}` : ''}`),
+  search: (filters: MovementFilters) => http.get<Page<Movement>>(`/movements${query({ ...filters })}`),
   byProduct: (productId: number) => http.get<Movement[]>(`/products/${productId}/movements`),
   register: (productId: number, body: MovementRequest) =>
     http.post<Movement>(`/products/${productId}/movements`, body),
+}
+
+export const projectsApi = {
+  search: (filters: ProjectFilters) => http.get<Page<Project>>(`/projects${query({ ...filters })}`),
+  get: (id: number) => http.get<Project>(`/projects/${id}`),
+  create: (body: ProjectRequest) => http.post<Project>('/projects', body),
+  update: (id: number, body: ProjectRequest) => http.put<Project>(`/projects/${id}`, body),
+  remove: (id: number) => http.delete<void>(`/projects/${id}`),
+  assign: (projectId: number, body: AssignmentRequest) =>
+    http.post<ProjectAssignment>(`/projects/${projectId}/assignments`, body),
+  removeAssignment: (projectId: number, assignmentId: number) =>
+    http.delete<void>(`/projects/${projectId}/assignments/${assignmentId}`),
+  deliver: (projectId: number, body: ProjectMaterialRequest) =>
+    http.post<Movement>(`/projects/${projectId}/deliveries`, body),
+  returnMaterial: (projectId: number, body: ProjectMaterialRequest) =>
+    http.post<Movement>(`/projects/${projectId}/returns`, body),
+  movements: (projectId: number) => http.get<Movement[]>(`/projects/${projectId}/movements`),
 }

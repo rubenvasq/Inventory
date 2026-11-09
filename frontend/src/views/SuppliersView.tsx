@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { suppliersApi } from '../api/endpoints'
 import { errorMessage, fieldErrors } from '../api/formError'
+import { useAuth } from '../auth/AuthContext'
 import type { Supplier, SupplierRequest } from '../api/types'
 import { Field } from '../components/Field'
 import { Modal } from '../components/Modal'
@@ -17,6 +18,7 @@ const EMPTY: SupplierRequest = {
 
 export function SuppliersView() {
   const toast = useToast()
+  const { isAdmin } = useAuth()
   const [items, setItems] = useState<Supplier[]>([])
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState<Supplier | null>(null)
@@ -49,9 +51,11 @@ export function SuppliersView() {
     <section>
       <div className="view-header">
         <h1>Proveedores</h1>
-        <button className="btn btn-primary" onClick={() => setCreating(true)}>
-          + Nuevo proveedor
-        </button>
+        {isAdmin && (
+          <button className="btn btn-primary" onClick={() => setCreating(true)}>
+            + Nuevo proveedor
+          </button>
+        )}
       </div>
 
       {loading ? (
@@ -83,12 +87,16 @@ export function SuppliersView() {
                   </span>
                 </td>
                 <td className="col-actions">
-                  <button className="btn btn-sm" onClick={() => setEditing(s)}>
-                    Editar
-                  </button>
-                  <button className="btn btn-sm btn-danger" onClick={() => remove(s)}>
-                    Eliminar
-                  </button>
+                  {isAdmin && (
+                    <>
+                      <button className="btn btn-sm" onClick={() => setEditing(s)}>
+                        Editar
+                      </button>
+                      <button className="btn btn-sm btn-danger" onClick={() => remove(s)}>
+                        Eliminar
+                      </button>
+                    </>
+                  )}
                 </td>
               </tr>
             ))}

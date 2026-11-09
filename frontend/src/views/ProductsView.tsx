@@ -1,11 +1,13 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { categoriesApi, movementsApi, productsApi, suppliersApi } from '../api/endpoints'
 import { errorMessage, fieldErrors } from '../api/formError'
+import { useAuth } from '../auth/AuthContext'
 import type {
   Category,
   Movement,
   MovementRequest,
   MovementType,
+  Page,
   Product,
   ProductRequest,
   Supplier,
@@ -15,6 +17,7 @@ import { Modal } from '../components/Modal'
 import { useToast } from '../components/Toast'
 
 const currency = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' })
+const PAGE_SIZE = 20
 
 /** Miniatura del producto con respaldo cuando no hay imagen o falla la carga. */
 function ProductThumb({ product, size = 44 }: { product: Product; size?: number }) {
@@ -41,29 +44,50 @@ function ProductThumb({ product, size = 44 }: { product: Product; size?: number 
 
 export function ProductsView() {
   const toast = useToast()
+  const { isAdmin } = useAuth()
   const [items, setItems] = useState<Product[]>([])
+  const [pageData, setPageData] = useState<Page<Product> | null>(null)
   const [categories, setCategories] = useState<Category[]>([])
   const [suppliers, setSuppliers] = useState<Supplier[]>([])
   const [loading, setLoading] = useState(true)
+  const [searchFilter, setSearchFilter] = useState('')
   const [categoryFilter, setCategoryFilter] = useState<number | ''>('')
   const [lowStockOnly, setLowStockOnly] = useState(false)
+  const [page, setPage] = useState(0)
 
   const [editing, setEditing] = useState<Product | null>(null)
   const [creating, setCreating] = useState(false)
   const [movementFor, setMovementFor] = useState<Product | null>(null)
   const [historyFor, setHistoryFor] = useState<Product | null>(null)
 
-  const load = () => {
+  const load = (targetPage = page) => {
     setLoading(true)
-    const source = lowStockOnly
-      ? productsApi.lowStock()
-      : productsApi.list(categoryFilter === '' ? undefined : categoryFilter)
-    source
-      .then(setItems)
+    productsApi
+      .search({
+        search: searchFilter || undefined,
+        categoryId: categoryFilter === '' ? undefined : categoryFilter,
+        lowStock: lowStockOnly || undefined,
+        page: targetPage,
+        size: PAGE_SIZE,
+      })
+      .then((result) => {
+        setItems(result.content)
+        setPageData(result)
+      })
       .catch((e) => toast.error(errorMessage(e)))
       .finally(() => setLoading(false))
   }
-  useEffect(load, [categoryFilter, lowStockOnly]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Buscar al escribir con un pequeño debounce para no saturar la API.
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setPage(0)
+      load(0)
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [searchFilter, categoryFilter, lowStockOnly]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(load, [page]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     categoriesApi.list().then(setCategories).catch(() => {})
@@ -77,27 +101,52 @@ export function ProductsView() {
       toast.success('Producto eliminado')
       load()
     } catch (e) {
+      // Si tiene movimientos, el backend rechaza el borrado y sugiere archivar.
+      toast.error(errorMessage(e))
+      load()
+    }
+  }
+
+  const toggleArchive = async (p: Product) => {
+    try {
+      if (p.active) {
+        await productsApi.archive(p.id)
+        toast.success('Producto archivado (conserva su historial)')
+      } else {
+        await productsApi.restore(p.id)
+        toast.success('Producto reactivado')
+      }
+      load()
+    } catch (e) {
       toast.error(errorMessage(e))
     }
   }
 
   const openForm = creating || editing !== null
+  const totalPages = pageData?.totalPages ?? 0
 
   return (
     <section>
       <div className="view-header">
         <h1>Productos</h1>
-        <button className="btn btn-primary" onClick={() => setCreating(true)}>
-          + Nuevo producto
-        </button>
+        {isAdmin && (
+          <button className="btn btn-primary" onClick={() => setCreating(true)}>
+            + Nuevo producto
+          </button>
+        )}
       </div>
 
       <div className="filters">
+        <input
+          className="filter-search"
+          placeholder="Buscar por nombre o SKU…"
+          value={searchFilter}
+          onChange={(e) => setSearchFilter(e.target.value)}
+        />
         <label>
           Categoría:{' '}
           <select
             value={categoryFilter}
-            disabled={lowStockOnly}
             onChange={(e) => setCategoryFilter(e.target.value === '' ? '' : Number(e.target.value))}
           >
             <option value="">Todas</option>
@@ -121,7 +170,7 @@ export function ProductsView() {
       {loading ? (
         <p className="muted"><span className="spinner" />Cargando…</p>
       ) : items.length === 0 ? (
-        <p className="muted">No hay productos que mostrar.</p>
+        <p className="muted">No hay productos que coincidan con la búsqueda.</p>
       ) : (
         <table className="data-table">
           <thead>
@@ -138,12 +187,15 @@ export function ProductsView() {
           </thead>
           <tbody>
             {items.map((p) => (
-              <tr key={p.id}>
+              <tr key={p.id} className={p.active ? undefined : 'row-inactive'}>
                 <td className="col-thumb">
                   <ProductThumb product={p} />
                 </td>
                 <td className="mono">{p.sku}</td>
-                <td>{p.name}</td>
+                <td>
+                  {p.name}
+                  {!p.active && <span className="badge badge-off">Archivado</span>}
+                </td>
                 <td className="muted">{p.categoryName}</td>
                 <td className="muted">{p.supplierName ?? '—'}</td>
                 <td className="num">{p.unitPrice != null ? currency.format(p.unitPrice) : '—'}</td>
@@ -160,17 +212,42 @@ export function ProductsView() {
                   <button className="btn btn-sm" onClick={() => setHistoryFor(p)}>
                     Historial
                   </button>
-                  <button className="btn btn-sm" onClick={() => setEditing(p)}>
-                    Editar
-                  </button>
-                  <button className="btn btn-sm btn-danger" onClick={() => remove(p)}>
-                    Eliminar
-                  </button>
+                  {isAdmin && (
+                    <>
+                      <button className="btn btn-sm" onClick={() => setEditing(p)}>
+                        Editar
+                      </button>
+                      <button className="btn btn-sm" onClick={() => toggleArchive(p)}>
+                        {p.active ? 'Archivar' : 'Reactivar'}
+                      </button>
+                      <button className="btn btn-sm btn-danger" onClick={() => remove(p)}>
+                        Eliminar
+                      </button>
+                    </>
+                  )}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+      )}
+
+      {pageData && totalPages > 1 && (
+        <div className="pagination">
+          <button className="btn btn-sm" onClick={() => setPage(page - 1)} disabled={page <= 0}>
+            ← Anterior
+          </button>
+          <span className="muted">
+            Página {pageData.page + 1} de {totalPages} · {pageData.totalElements} resultados
+          </span>
+          <button
+            className="btn btn-sm"
+            onClick={() => setPage(page + 1)}
+            disabled={pageData.page >= totalPages - 1}
+          >
+            Siguiente →
+          </button>
+        </div>
       )}
 
       {openForm && (
@@ -261,7 +338,11 @@ function ProductForm({
         toast.success('Producto actualizado')
       } else {
         await productsApi.create(form)
-        toast.success('Producto creado')
+        toast.success(
+          (form.stock ?? 0) > 0
+            ? 'Producto creado con su movimiento de saldo inicial'
+            : 'Producto creado',
+        )
       }
       onSaved()
     } catch (err) {
@@ -400,6 +481,12 @@ function ProductForm({
             />
           </Field>
         </div>
+        {!initial && (
+          <p className="hint">
+            Si el stock inicial es mayor que cero, se registra automáticamente el movimiento de
+            saldo inicial que explica esas existencias.
+          </p>
+        )}
         {initial && (
           <p className="hint">
             Las existencias ({initial.stock} {initial.unit}) se ajustan mediante movimientos, no

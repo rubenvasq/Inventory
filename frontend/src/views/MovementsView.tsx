@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { movementsApi } from '../api/endpoints'
 import { errorMessage } from '../api/formError'
-import type { Movement, MovementType } from '../api/types'
+import type { Movement, MovementType, Page } from '../api/types'
 import { useToast } from '../components/Toast'
 
 const TYPES: { value: MovementType | ''; label: string }[] = [
@@ -11,20 +11,50 @@ const TYPES: { value: MovementType | ''; label: string }[] = [
   { value: 'ADJUSTMENT', label: 'Ajustes' },
 ]
 
+const PAGE_SIZE = 20
+
 export function MovementsView() {
   const toast = useToast()
   const [items, setItems] = useState<Movement[]>([])
+  const [pageData, setPageData] = useState<Page<Movement> | null>(null)
   const [loading, setLoading] = useState(true)
+  const [productFilter, setProductFilter] = useState('')
   const [typeFilter, setTypeFilter] = useState<MovementType | ''>('')
+  const [fromFilter, setFromFilter] = useState('')
+  const [toFilter, setToFilter] = useState('')
+  const [page, setPage] = useState(0)
 
-  useEffect(() => {
+  const load = (targetPage = page) => {
     setLoading(true)
     movementsApi
-      .list(typeFilter === '' ? undefined : typeFilter)
-      .then(setItems)
+      .search({
+        product: productFilter || undefined,
+        type: typeFilter === '' ? undefined : typeFilter,
+        from: fromFilter || undefined,
+        to: toFilter || undefined,
+        page: targetPage,
+        size: PAGE_SIZE,
+      })
+      .then((result) => {
+        setItems(result.content)
+        setPageData(result)
+      })
       .catch((e) => toast.error(errorMessage(e)))
       .finally(() => setLoading(false))
-  }, [typeFilter]) // eslint-disable-line react-hooks/exhaustive-deps
+  }
+
+  // Al cambiar un filtro se vuelve a la primera pagina.
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setPage(0)
+      load(0)
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [productFilter, typeFilter, fromFilter, toFilter]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(load, [page]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const totalPages = pageData?.totalPages ?? 0
 
   return (
     <section>
@@ -33,6 +63,12 @@ export function MovementsView() {
       </div>
 
       <div className="filters">
+        <input
+          className="filter-search"
+          placeholder="Buscar por producto o SKU…"
+          value={productFilter}
+          onChange={(e) => setProductFilter(e.target.value)}
+        />
         <label>
           Tipo:{' '}
           <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value as MovementType | '')}>
@@ -43,12 +79,20 @@ export function MovementsView() {
             ))}
           </select>
         </label>
+        <label>
+          Desde:{' '}
+          <input type="date" value={fromFilter} onChange={(e) => setFromFilter(e.target.value)} />
+        </label>
+        <label>
+          Hasta:{' '}
+          <input type="date" value={toFilter} onChange={(e) => setToFilter(e.target.value)} />
+        </label>
       </div>
 
       {loading ? (
         <p className="muted"><span className="spinner" />Cargando…</p>
       ) : items.length === 0 ? (
-        <p className="muted">No hay movimientos registrados.</p>
+        <p className="muted">No hay movimientos que coincidan con la búsqueda.</p>
       ) : (
         <table className="data-table">
           <thead>
@@ -59,6 +103,7 @@ export function MovementsView() {
               <th className="num">Cant.</th>
               <th className="num">Antes</th>
               <th className="num">Después</th>
+              <th>Proyecto</th>
               <th>Nota</th>
             </tr>
           </thead>
@@ -75,11 +120,30 @@ export function MovementsView() {
                 <td className="num">{m.quantity}</td>
                 <td className="num muted">{m.previousStock}</td>
                 <td className="num">{m.newStock}</td>
+                <td className="muted">{m.projectName ?? '—'}</td>
                 <td className="muted">{m.note ?? '—'}</td>
               </tr>
             ))}
           </tbody>
         </table>
+      )}
+
+      {pageData && totalPages > 1 && (
+        <div className="pagination">
+          <button className="btn btn-sm" onClick={() => setPage(page - 1)} disabled={page <= 0}>
+            ← Anterior
+          </button>
+          <span className="muted">
+            Página {pageData.page + 1} de {totalPages} · {pageData.totalElements} resultados
+          </span>
+          <button
+            className="btn btn-sm"
+            onClick={() => setPage(page + 1)}
+            disabled={pageData.page >= totalPages - 1}
+          >
+            Siguiente →
+          </button>
+        </div>
       )}
     </section>
   )

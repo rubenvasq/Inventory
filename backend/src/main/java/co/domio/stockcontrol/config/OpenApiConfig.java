@@ -18,7 +18,7 @@ public class OpenApiConfig {
     public OpenAPI stockControlOpenApi() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("StockControl API")
+                        .title("Kardex API")
                         .description("API REST del sistema de gestion de inventario de DOMIO")
                         .version("v1")
                         .contact(new Contact().name("DOMIO").email("domio.co@outlook.com"))

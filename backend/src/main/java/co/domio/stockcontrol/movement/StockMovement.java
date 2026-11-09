@@ -53,6 +53,14 @@ public class StockMovement {
     @Column(name = "note", length = 255)
     private String note;
 
+    /**
+     * Proyecto al que pertenece el movimiento, cuando se origino en la entrega
+     * o devolucion de material a un proyecto. Se guarda como identificador
+     * plano para no acoplar este libro mayor con la entidad de proyecto.
+     */
+    @Column(name = "project_id", updatable = false)
+    private Long projectId;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;

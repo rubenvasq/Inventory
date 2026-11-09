@@ -6,10 +6,11 @@ import { DashboardView } from './views/DashboardView'
 import { LoginView } from './views/LoginView'
 import { MovementsView } from './views/MovementsView'
 import { ProductsView } from './views/ProductsView'
+import { ProjectsView } from './views/ProjectsView'
 import { SuppliersView } from './views/SuppliersView'
 import { UsersView } from './views/UsersView'
 
-type Tab = 'dashboard' | 'products' | 'categories' | 'suppliers' | 'movements' | 'users'
+type Tab = 'dashboard' | 'products' | 'categories' | 'suppliers' | 'movements' | 'projects' | 'users'
 
 interface TabDef {
   id: Tab
@@ -23,6 +24,7 @@ const TABS: TabDef[] = [
   { id: 'categories', label: 'Categorías' },
   { id: 'suppliers', label: 'Proveedores' },
   { id: 'movements', label: 'Movimientos' },
+  { id: 'projects', label: 'Proyectos' },
   { id: 'users', label: 'Usuarios', adminOnly: true },
 ]
 
@@ -46,9 +48,9 @@ function App() {
     <div className="app">
       <aside className="sidebar">
         <div className="brand">
-          <span className="brand-mark">SC</span>
+          <span className="brand-mark">KX</span>
           <div>
-            <strong>StockControl</strong>
+            <strong>Kardex</strong>
             <small>DOMIO</small>
           </div>
         </div>
@@ -81,6 +83,7 @@ function App() {
           {activeTab === 'categories' && <CategoriesView />}
           {activeTab === 'suppliers' && <SuppliersView />}
           {activeTab === 'movements' && <MovementsView />}
+          {activeTab === 'projects' && <ProjectsView />}
           {activeTab === 'users' && <UsersView />}
         </div>
       </main>

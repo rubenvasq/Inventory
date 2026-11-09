@@ -4,11 +4,12 @@ import jakarta.persistence.LockModeType;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
 
     /** Carga el producto con bloqueo de escritura para ajustar su stock de forma segura. */
     @Lock(LockModeType.PESSIMISTIC_WRITE)

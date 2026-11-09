@@ -1,12 +1,18 @@
 package co.domio.stockcontrol.movement;
 
+import co.domio.stockcontrol.common.dto.PageResponse;
 import co.domio.stockcontrol.movement.dto.MovementRequest;
 import co.domio.stockcontrol.movement.dto.MovementResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,8 +48,14 @@ public class StockMovementController {
     }
 
     @GetMapping("/api/movements")
-    @Operation(summary = "Listar todos los movimientos, opcionalmente filtrados por tipo")
-    public List<MovementResponse> all(@RequestParam(required = false) MovementType type) {
-        return service.findAll(type);
+    @Operation(summary = "Buscar movimientos con filtros y paginacion del lado del servidor")
+    public PageResponse<MovementResponse> all(
+            @RequestParam(required = false) Long productId,
+            @RequestParam(required = false) String product,
+            @RequestParam(required = false) MovementType type,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
+            @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        return service.search(productId, product, type, from, to, pageable);
     }
 }
