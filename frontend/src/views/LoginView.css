@@ -1,0 +1,64 @@
+.kanban-login {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  background: #fff;
+  color: #48505e;
+  font-family: Inter, 'Segoe UI', Arial, sans-serif;
+  padding: 64px 0;
+}
+.login-identity { display: flex; flex-direction: column; align-items: center; gap: 32px; transform: translateX(-11px); }
+.login-identity img { display: block; }
+.login-identity span { color: #009ed8; font-size: 47px; font-weight: 600; line-height: normal; }
+.login-content { width: 360px; max-width: calc(100% - 40px); justify-self: center; transform: translateX(-58px); }
+.login-heading { display: flex; flex-direction: column; align-items: center; gap: 24px; text-align: center; margin-bottom: 32px; }
+.login-heading img { display: block; }
+.login-heading h1 { font-size: 30px; line-height: 38px; font-weight: 600; letter-spacing: -1px; color: #2b2f38; margin: 0 0 12px; }
+.login-heading p { font-size: 16px; line-height: 24px; color: #667085; margin: 0; }
+.login-form { display: flex; flex-direction: column; gap: 20px; }
+.login-form .field { display: flex; flex-direction: column; gap: 6px; margin: 0; }
+.login-form .field label { font-size: 14px; line-height: 20px; font-weight: 500; color: #48505e; }
+.login-form .field input { height: 44px; padding: 10px 14px; border: 1px solid #d0d5dd; border-radius: 8px; font-size: 16px; line-height: 24px; box-shadow: 0 1px 2px #1018280d; }
+.login-form input::placeholder { color: #667085; opacity: 1; }
+.login-form input:focus { border-color: #1366d9; box-shadow: 0 0 0 3px #1366d926; }
+.login-options { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 4px 0; }
+.login-remember { display: flex; align-items: center; gap: 8px; font-size: 13px; line-height: 20px; white-space: nowrap; cursor: pointer; }
+.login-remember input { width: 16px; height: 16px; margin: 0; accent-color: #1366d9; }
+.login-link { padding: 0; border: 0; background: transparent; color: #1366d9; font-size: 13px; line-height: 20px; font-weight: 500; }
+.login-link:hover { text-decoration: underline; }
+.login-submit, .login-google { display: flex; justify-content: center; align-items: center; gap: 12px; width: 100%; min-height: 44px; padding: 10px 16px; border-radius: 4px; font-size: 16px; line-height: 24px; font-weight: 500; box-shadow: 0 1px 2px #1018280d; }
+.login-submit { color: white; background: #1366d9; border: 1px solid #1366d9; }
+.login-submit:hover { background: #1058bc; }
+.login-submit:disabled { opacity: .65; cursor: wait; }
+.login-google { background: white; color: #383e49; border: 1px solid #d0d5dd; margin-top: -4px; }
+.login-google:hover { background: #f9fafb; }
+.login-google img { display: block; flex-shrink: 0; }
+.login-signup { margin: 32px 0 0; text-align: center; color: #667085; font-size: 14px; line-height: 20px; }
+.login-signup .login-link { font-size: 14px; }
+.login-notice { margin: 20px 0 0; padding: 12px; border-radius: 8px; background: #eff6ff; color: #344054; font-size: 14px; }
+.kanban-login button:focus-visible { outline: 3px solid #84adf5; outline-offset: 3px; }
+@media (max-width: 1100px) { .login-content, .login-identity { transform: none; } }
+@media (max-width: 700px) {
+  .kanban-login { grid-template-columns: minmax(0, 1fr); padding: 40px 20px; }
+  .login-identity { display: none; }
+  .login-content { max-width: 100%; }
+  .login-heading h1 { font-size: 27px; }
+}
+
+.login-identity .kardex-login-brand { width:min(420px,85%); height:auto; object-fit:contain; }
+.login-heading .kardex-login-logo { width:180px; max-width:100%; height:auto; object-fit:contain; }
+
+/* ===== Modo oscuro (data-theme="dark" en <html>) ===== */
+[data-theme='dark'] .kanban-login { background: var(--surface); color: var(--text); }
+[data-theme='dark'] .login-heading h1 { color: var(--text); }
+[data-theme='dark'] .login-heading p { color: var(--muted); }
+[data-theme='dark'] .login-form .field label { color: var(--text); }
+[data-theme='dark'] .login-form .field input { border-color: var(--border); box-shadow: none; }
+[data-theme='dark'] .login-form input::placeholder { color: var(--muted); }
+[data-theme='dark'] .login-google { background: var(--surface-2); color: var(--text); border-color: var(--border); }
+[data-theme='dark'] .login-google:hover { background: #2b3140; }
+[data-theme='dark'] .login-signup { color: var(--muted); }
+[data-theme='dark'] .login-notice { background: rgba(76, 141, 255, 0.12); color: var(--text); }
+

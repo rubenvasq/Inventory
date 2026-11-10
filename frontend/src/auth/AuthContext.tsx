@@ -10,6 +10,8 @@ interface AuthContextValue {
   logout: () => void
   isAdmin: boolean
   role: Role | null
+  /** Recarga el usuario autenticado (p. ej. tras editar el perfil propio). */
+  refreshUser: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null)
@@ -47,6 +49,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(result)
   }, [])
 
+  const refreshUser = useCallback(async () => {
+    try {
+      setUser(await authApi.me())
+    } catch {
+      logout()
+    }
+  }, [logout])
+
   const value: AuthContextValue = {
     user,
     loading,
@@ -54,6 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     logout,
     isAdmin: user?.role === 'ADMIN',
     role: user?.role ?? null,
+    refreshUser,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

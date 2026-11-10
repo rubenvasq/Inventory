@@ -1,0 +1,122 @@
+:root{--bg:#f0f1f3;--surface:#fff;--surface-2:#f7f8fa;--border:#f0f1f3;--text:#383e49;--muted:#858d9d;--primary:#1570ef;--primary-hover:#0f50aa;--radius:8px;--chart-ok:#75c6f0;--chart-warn:#f0ad61;font-family:Inter,'Segoe UI',Arial,sans-serif}
+.app{display:grid;grid-template-columns:280px minmax(0,1fr);background:var(--bg)}
+.sidebar{position:sticky;top:0;height:100vh;padding:28px 24px 32px;gap:36px;border-radius:0 8px 8px 0;border-right:1px solid var(--border)}
+.brand{border:0;padding:0 12px;gap:14px;min-height:48px}.app-logo{width:48px;height:48px}.brand strong{color:var(--primary);font-size:20px;letter-spacing:0;font-weight:600}.brand small{font-size:10px;letter-spacing:2px}
+.sidebar nav{gap:12px}.nav-item{padding:16px;gap:16px;font-size:16px;color:#5d6679;font-weight:500;background:transparent;box-shadow:none}.nav-item.active{color:var(--primary);background:transparent;box-shadow:none}.nav-item:hover{background:#f2f7ff}
+.design-icon{display:block;flex-shrink:0;max-width:26px;max-height:26px}.nav-item .design-icon{object-fit:contain}.sidebar-footer{padding:16px;border:0;gap:18px}.sidebar-footer .btn{display:flex;align-items:center;gap:16px;padding:0;background:transparent;border:0;font-size:16px;color:#5d6679}.user-chip{font-size:13px}
+.main-workspace{min-width:0}.topbar{height:100px;padding:28px 32px;background:#fff;border:1px solid #eee;display:flex;align-items:center;justify-content:space-between;gap:20px}.global-search{width:400px;max-width:70%;height:44px;border:1px solid var(--border);border-radius:4px;display:flex;align-items:center;padding:10px 16px;gap:8px}.global-search input{padding:0;border:0;box-shadow:none;outline:none;min-width:0;font-size:14px}.global-search:focus-within{outline:2px solid #b6d3fa}.global-search input:focus-visible{outline:0}.topbar-user{display:flex;align-items:center;gap:24px}.notification-button{background:transparent;border:0;padding:8px}.user-avatar{width:40px;height:40px;border-radius:50%;background:#e8f1fd;color:#1570ef;display:grid;place-items:center;font-weight:600;border:0;cursor:pointer;font-size:15px;padding:0}
+.content{background:var(--bg);padding:22px 32px 30px;overflow-x:visible}.view-header{min-height:70px;margin-bottom:20px;border:0}.view-header h1{font-size:24px;font-weight:500;letter-spacing:0}
+.inventory-dashboard{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(0,1fr);gap:22px}.summary-card{border-radius:8px;background:#fff;min-width:0;overflow:hidden;padding:18px 16px 22px}.summary-card-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:20px;min-height:30px}.summary-card h2{font-size:20px;line-height:30px;font-weight:500;letter-spacing:0}
+.summary-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.four-metrics{grid-template-columns:repeat(4,minmax(0,1fr))}.summary-metric{display:flex;align-items:center;flex-direction:column;gap:5px;border-right:1px solid var(--border);text-align:center;padding:0 10px}.summary-metric:last-child{border:0}.summary-metric strong{font-size:16px;font-weight:600;color:#5d6679;overflow-wrap:anywhere}.summary-metric>span:last-child{font-size:12px;color:#667085}.metric-icon{display:grid;place-items:center;width:30px;height:30px;border-radius:4px;margin-bottom:6px}.metric-blue{background:#e8f1fd}.metric-purple{background:#eceaff}.metric-orange{background:#ffeedb}.metric-green{background:#ebffed}.metric-cyan{background:#e0f7ff}
+.overview-card,.stock-summary-card,.catalog-card,.product-summary-card{min-height:164px}.category-chart-card,.health-card{min-height:360px}.chart-select{width:auto;max-width:130px;font-size:12px;border:1px solid #d0d3d9;border-radius:4px;padding:6px 10px;color:#5d6679}.category-chart{display:flex;gap:10px;height:235px;padding:10px 8px 0}.chart-y{display:flex;flex-direction:column;justify-content:space-between;font-size:10px;color:#858d9d;text-align:right;min-width:42px;padding-bottom:32px}.chart-plot{display:flex;flex:1;min-width:0;gap:10px;background:repeating-linear-gradient(to top,transparent 0,transparent calc(25% - 1px),#e3e6eb calc(25% - 1px),#e3e6eb 25%);background-size:100% calc(100% - 32px);background-repeat:no-repeat}.chart-column{flex:1;min-width:0;display:flex;flex-direction:column}.chart-bar-area{height:calc(100% - 32px);display:flex;align-items:flex-end;justify-content:center;position:relative}.chart-bar{width:18px;max-width:50%;background:linear-gradient(0deg,#817af3,#74b0fa 48%,#79d0f1);border-radius:6px 6px 0 0}.chart-column:nth-child(even) .chart-bar{background:linear-gradient(0deg,#46a46c,#51cc5d 48%,#57da65)}.chart-value{display:none;position:absolute;top:0;padding:3px;background:#fff;font-size:10px}.chart-column:hover .chart-value{display:block}.chart-category{height:32px;font-size:10px;color:#858d9d;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;padding-top:8px;text-align:center}.chart-legend{display:flex;align-items:center;justify-content:center;gap:8px;font-size:11px;color:#667085;margin-top:12px}.chart-legend i{width:12px;height:12px;background:linear-gradient(#79d0f1,#817af3);border-radius:50%}
+.health-chart{display:grid;place-items:center;min-height:218px}.health-donut{width:190px;height:190px;border-radius:50%;display:grid;place-items:center}.health-donut>div{width:146px;height:146px;border-radius:50%;background:#fff;display:flex;flex-direction:column;justify-content:center;align-items:center}.health-donut strong{font-size:32px;font-weight:600;color:#383e49}.health-donut span{font-size:11px;color:#858d9d}.health-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;font-size:11px;color:#667085;margin-top:12px}.health-legend>span{display:flex;align-items:center;gap:5px}.health-legend i{width:10px;height:10px;border-radius:50%;background:var(--chart-ok)}.health-legend>span:last-child i{background:var(--chart-warn)}
+.text-link{border:0;background:transparent;color:#0f50aa;font-size:12px;padding:0;white-space:nowrap}.category-table-card{padding-bottom:0}.dashboard-table-wrap{margin:0 -16px;overflow-x:auto}.inventory-dashboard .data-table{border:0;border-radius:0}.inventory-dashboard .data-table th{font-weight:500;color:#5d6679;text-transform:none;letter-spacing:0;background:#fff;font-size:12px;padding:12px 16px}.inventory-dashboard .data-table td{font-size:12px;color:#667085;padding:19px 16px}
+.low-stock-list{display:flex;flex-direction:column;gap:20px}.low-stock-item{display:flex;align-items:center;gap:16px}.low-stock-image{width:48px;height:54px;object-fit:contain;flex-shrink:0;border-radius:4px}.product-initial{display:grid;place-items:center;background:#f2f4f7;font-size:24px;color:#858d9d}.low-stock-item>div{min-width:0;flex:1}.low-stock-item strong{display:block;font-size:13px;font-weight:600;overflow-wrap:anywhere}.low-stock-item small{display:block;font-size:11px;color:#858d9d;margin-top:5px}.low-stock-badge{background:#feeceb;color:#aa3028;border-radius:16px;padding:2px 8px;font-size:10px}.dashboard-empty{color:#858d9d;font-size:13px;padding:30px 16px}.dashboard-status{background:white;border-radius:8px;padding:32px}
+.btn{border-color:#d0d3d9;border-radius:4px;background:#fff;color:#5d6679}.btn-primary{background:var(--primary);border-color:var(--primary);color:white}.btn-danger{color:var(--danger)}.products-view{background:white;padding:0 20px 24px;border-radius:8px}.product-statistics{background:white;margin:0 0 22px;padding:22px 0}.product-stat-grid strong{color:#1570ef}.products-view .view-header{padding-top:12px}.product-table .col-actions .btn{margin:3px}.mini-gauge{border-color:#629ff4}.stock-number{color:#1570ef}.stock-warning{color:#b08438}.panel{border:0}
+@media(min-width:1500px){.content{padding:22px 32px 30px}.product-statistics{margin:0 0 22px;padding:22px 0}}
+@media(max-width:1200px){.app{grid-template-columns:230px minmax(0,1fr)}.sidebar{padding:24px 16px}.nav-item{padding:14px 12px;font-size:14px}.content{padding:20px}.inventory-dashboard{gap:18px;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}.four-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 0}.four-metrics .summary-metric:nth-child(2){border:0}.summary-card h2{font-size:17px}}
+@media(max-width:980px){.app{grid-template-columns:200px minmax(0,1fr)}.inventory-dashboard{grid-template-columns:minmax(0,1fr)}.sidebar{padding:24px 10px}.brand{padding:0 8px}.app-logo{width:38px;height:38px}.topbar{padding:20px}.global-search{max-width:78%}.topbar-user{gap:8px}}
+@media(max-width:760px){.app{grid-template-columns:minmax(0,1fr)}.sidebar{position:static;height:auto;padding:16px;gap:16px;border-radius:0}.sidebar nav{flex-direction:row;gap:4px;overflow-x:auto}.nav-item{padding:10px;flex-shrink:0;gap:8px}.sidebar-footer{display:none}.brand small{display:block}.brand{padding:0}.brand strong{font-size:18px}.topbar{height:76px;padding:16px}.content{padding:16px}.global-search{max-width:none;flex:1;padding:8px}.global-search input{font-size:12px}.notification-button{display:none}.inventory-dashboard{gap:16px}.summary-card-header{flex-wrap:wrap}.products-view{padding:0 14px 20px}.product-statistics{margin:0 0 20px;padding:18px 0}.view-header{flex-wrap:wrap;gap:12px}.filters select{max-width:200px}.chart-plot{gap:5px}}
+
+.brand .app-logo.kardex-wordmark { display:block; width:100%; max-width:208px; height:auto; object-fit:contain; }
+
+/* ========================================================================
+   Menu del perfil (avatar del topbar)
+   ======================================================================== */
+.profile-menu-anchor{position:relative}
+.profile-menu{position:absolute;top:calc(100% + 10px);right:0;min-width:250px;background:var(--surface);border:1px solid var(--border);border-radius:8px;box-shadow:0 18px 44px rgba(9,14,26,.22);padding:6px;z-index:60;display:flex;flex-direction:column;animation:fade-in-up .16s ease both}
+.profile-menu-header{display:flex;align-items:center;gap:12px;padding:10px 12px 12px;border-bottom:1px solid var(--border);margin-bottom:6px}
+.profile-menu-avatar{width:42px;height:42px;border-radius:50%;background:#e8f1fd;color:#1570ef;display:grid;place-items:center;font-weight:600;font-size:16px;flex-shrink:0}
+.profile-menu-header strong{display:block;font-size:14px;line-height:1.3;overflow-wrap:anywhere}
+.profile-menu-header small{color:var(--muted);font-size:12px}
+.profile-menu-item{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;border:0;background:transparent;border-radius:6px;font-size:14px;color:var(--text);text-align:left}
+.profile-menu-item:hover{background:var(--surface-2)}
+.profile-menu-item .design-icon{max-width:20px;max-height:20px}
+.profile-menu-item.danger{color:var(--danger)}
+.profile-menu-separator{height:1px;background:var(--border);margin:6px 4px}
+.theme-switch{margin-left:auto;width:38px;height:22px;border-radius:999px;background:#d0d3d9;position:relative;transition:background .18s ease;flex-shrink:0}
+.theme-switch::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .18s ease;box-shadow:0 1px 2px rgba(9,14,26,.25)}
+.profile-menu-item[aria-pressed='true'] .theme-switch{background:var(--primary)}
+.profile-menu-item[aria-pressed='true'] .theme-switch::after{left:19px}
+
+/* ========================================================================
+   Modal del perfil propio
+   ======================================================================== */
+.profile-modal{display:flex;flex-direction:column;gap:22px}
+.profile-account{display:flex;align-items:center;gap:14px;padding:14px;background:var(--surface-2);border-radius:8px}
+.profile-account-avatar{width:48px;height:48px;border-radius:50%;background:#e8f1fd;color:#1570ef;display:grid;place-items:center;font-weight:600;font-size:18px;flex-shrink:0}
+.profile-account strong{display:block}
+.profile-account small{font-size:12px}
+.profile-section-title{font-size:15px;font-weight:600}
+
+/* ========================================================================
+   Modo oscuro
+   Se activa con data-theme="dark" en <html>: preferencia guardada del
+   usuario (localStorage) o, por defecto, la del sistema operativo. Se
+   sobreescriben los tokens y los colores claros que el diseno trae fijos.
+   ======================================================================== */
+:root[data-theme='dark']{--bg:#12141a;--surface:#1a1d26;--surface-2:#232836;--border:#2b3140;--text:#e8eaf0;--muted:#9aa2b1;--primary:#4c8dff;--primary-hover:#6ba2ff;--danger:#ff7076;--ok:#3dd68c;--warn:#f0b45a;--chart-ok:#75c6f0;--chart-warn:#f0ad61;color-scheme:dark}
+
+/* Estructura general */
+[data-theme='dark'] .topbar{background:var(--surface);border-color:var(--border)}
+[data-theme='dark'] .sidebar{background:var(--surface)}
+[data-theme='dark'] .content{background:var(--surface)}
+[data-theme='dark'] .workspace-rail{background:var(--surface)}
+[data-theme='dark'] .rail-bottom{background:var(--surface-2)}
+[data-theme='dark'] .global-search{background:var(--surface)}
+[data-theme='dark'] .global-search:focus-within{outline-color:rgba(76,141,255,.55)}
+[data-theme='dark'] .user-avatar,[data-theme='dark'] .profile-menu-avatar,[data-theme='dark'] .profile-account-avatar{background:rgba(76,141,255,.18);color:#7fabff}
+[data-theme='dark'] .kardex-wordmark,[data-theme='dark'] .kardex-login-brand,[data-theme='dark'] .kardex-login-logo{filter:brightness(0) invert(1)}
+
+/* Navegacion */
+[data-theme='dark'] .nav-item{color:#aab2c2}
+[data-theme='dark'] .nav-item:hover{background:rgba(76,141,255,.12)}
+[data-theme='dark'] .sidebar-footer .btn{color:#aab2c2}
+
+/* Tarjetas y metricas del panel */
+[data-theme='dark'] .summary-card{background:var(--surface)}
+[data-theme='dark'] .summary-metric strong{color:#cfd5e2}
+[data-theme='dark'] .summary-metric>span:last-child{color:var(--muted)}
+[data-theme='dark'] .metric-blue{background:rgba(76,141,255,.16)}
+[data-theme='dark'] .metric-purple{background:rgba(139,122,243,.18)}
+[data-theme='dark'] .metric-orange{background:rgba(240,173,97,.16)}
+[data-theme='dark'] .metric-green{background:rgba(61,214,140,.14)}
+[data-theme='dark'] .metric-cyan{background:rgba(121,208,241,.14)}
+[data-theme='dark'] .chart-select{border-color:var(--border);color:var(--muted);background:var(--surface)}
+[data-theme='dark'] .chart-plot{background:repeating-linear-gradient(to top,transparent 0,transparent calc(25% - 1px),#2b3140 calc(25% - 1px),#2b3140 25%)}
+[data-theme='dark'] .chart-value{background:var(--surface-2);color:var(--text)}
+[data-theme='dark'] .chart-y,[data-theme='dark'] .chart-category,[data-theme='dark'] .chart-legend{color:var(--muted)}
+[data-theme='dark'] .health-donut>div{background:var(--surface)}
+[data-theme='dark'] .health-donut strong{color:var(--text)}
+[data-theme='dark'] .health-donut span,[data-theme='dark'] .health-legend{color:var(--muted)}
+[data-theme='dark'] .text-link{color:#6ba2ff}
+
+/* Tablas */
+[data-theme='dark'] .inventory-dashboard .data-table th{background:var(--surface);color:var(--muted)}
+[data-theme='dark'] .inventory-dashboard .data-table td{color:var(--muted)}
+[data-theme='dark'] .product-table th{background:var(--surface);color:var(--muted)}
+[data-theme='dark'] .product-table td{border-color:var(--border)}
+[data-theme='dark'] .product-table .thumb{background:var(--surface-2)}
+[data-theme='dark'] .product-initial{background:var(--surface-2);color:var(--muted)}
+[data-theme='dark'] .low-stock-badge{background:rgba(229,72,77,.2);color:#ff9b9e}
+[data-theme='dark'] .dashboard-status{background:var(--surface)}
+
+/* Vista de productos */
+[data-theme='dark'] .products-view{background:var(--surface)}
+[data-theme='dark'] .product-statistics{background:var(--surface-2)}
+[data-theme='dark'] .product-stat-grid>div{border-color:var(--border)}
+[data-theme='dark'] .product-stat-grid strong,[data-theme='dark'] .stock-number{color:#7fabff}
+[data-theme='dark'] .stock-warning{color:#d9a959}
+[data-theme='dark'] .filter-search{background:var(--surface)}
+
+/* Botones (la base clara trae fondo blanco fijo) */
+[data-theme='dark'] .btn{background:var(--surface-2);border-color:var(--border);color:var(--text)}
+
+/* Medidores de stock: los gradientes traen marcas blancas fijas */
+[data-theme='dark'] .stock-gauge{background:repeating-conic-gradient(from 270deg at 50% 100%,transparent 0deg 4deg,#12141a 4deg 7deg),conic-gradient(from 270deg at 50% 100%,#5fa76a 0deg 145deg,#333b4a 145deg 180deg,transparent 180deg)}
+[data-theme='dark'] .stock-gauge-low{background:repeating-conic-gradient(from 270deg at 50% 100%,transparent 0deg 4deg,#12141a 4deg 7deg),conic-gradient(from 270deg at 50% 100%,#c4a260 0deg 40deg,#333b4a 40deg 180deg,transparent 180deg)}
+
+/* Detalles */
+[data-theme='dark'] .tag-status-progress{color:#7fabff}
+[data-theme='dark'] .modal-backdrop{background:rgba(5,8,14,.62)}
+

@@ -42,7 +42,7 @@ function ProductThumb({ product, size = 44 }: { product: Product; size?: number 
   )
 }
 
-export function ProductsView() {
+export function ProductsView({ initialSearch = '', initialLowStock = false }: { initialSearch?: string; initialLowStock?: boolean }) {
   const toast = useToast()
   const { isAdmin } = useAuth()
   const [items, setItems] = useState<Product[]>([])
@@ -50,9 +50,9 @@ export function ProductsView() {
   const [categories, setCategories] = useState<Category[]>([])
   const [suppliers, setSuppliers] = useState<Supplier[]>([])
   const [loading, setLoading] = useState(true)
-  const [searchFilter, setSearchFilter] = useState('')
+  const [searchFilter, setSearchFilter] = useState(initialSearch)
   const [categoryFilter, setCategoryFilter] = useState<number | ''>('')
-  const [lowStockOnly, setLowStockOnly] = useState(false)
+  const [lowStockOnly, setLowStockOnly] = useState(initialLowStock)
   const [page, setPage] = useState(0)
 
   const [editing, setEditing] = useState<Product | null>(null)
@@ -126,9 +126,9 @@ export function ProductsView() {
   const totalPages = pageData?.totalPages ?? 0
 
   return (
-    <section>
+    <section className="products-view">
       <div className="view-header">
-        <h1>Productos</h1>
+        <div><span className="eyebrow">INVENTARIO / PRODUCTOS</span><h1>Todos los productos</h1></div>
         {isAdmin && (
           <button className="btn btn-primary" onClick={() => setCreating(true)}>
             + Nuevo producto
@@ -136,10 +136,21 @@ export function ProductsView() {
         )}
       </div>
 
+      <div className="product-statistics">
+        <div className="statistics-heading"><h2>Estadísticas de productos</h2><span className="live-label">● Inventario en tiempo real</span></div>
+        <div className="product-stat-grid">
+          <div><span>Productos encontrados</span><strong>{loading ? '—' : (pageData?.totalElements ?? 0).toLocaleString('es-CO')} <small>productos</small></strong></div>
+          <div><span>Categorías disponibles</span><strong>{categories.length} <small>categorías</small></strong></div>
+          <div><span>Estado de stock · esta página</span><strong className="health-stat"><span className="mini-gauge" aria-hidden="true" />{loading ? '—' : items.some(p => p.lowStock) ? 'Por revisar' : items.length ? 'Saludable' : 'Sin datos'}</strong></div>
+          <div><span>Unidades · esta página</span><strong>{loading ? '—' : items.reduce((total, p) => total + p.stock, 0).toLocaleString('es-CO')} <small>unidades</small></strong></div>
+        </div>
+      </div>
+
       <div className="filters">
         <input
           className="filter-search"
-          placeholder="Buscar por nombre o SKU…"
+          aria-label="Buscar productos por nombre o SKU"
+          placeholder="Buscar producto por nombre o SKU…"
           value={searchFilter}
           onChange={(e) => setSearchFilter(e.target.value)}
         />
@@ -172,16 +183,13 @@ export function ProductsView() {
       ) : items.length === 0 ? (
         <p className="muted">No hay productos que coincidan con la búsqueda.</p>
       ) : (
-        <table className="data-table">
+        <div className="product-table-scroll"><table className="data-table product-table">
           <thead>
             <tr>
-              <th className="col-thumb"></th>
-              <th>SKU</th>
-              <th>Nombre</th>
-              <th>Categoría</th>
-              <th>Proveedor</th>
-              <th className="num">Precio</th>
-              <th className="num">Stock</th>
+              <th colSpan={2}>Producto</th>
+              <th>Disponibilidad</th>
+              <th>Stock</th>
+              <th>Precio unitario</th>
               <th className="col-actions">Acciones</th>
             </tr>
           </thead>
@@ -191,20 +199,14 @@ export function ProductsView() {
                 <td className="col-thumb">
                   <ProductThumb product={p} />
                 </td>
-                <td className="mono">{p.sku}</td>
-                <td>
-                  {p.name}
+                <td className="product-identity">
+                  <strong>{p.name}</strong>
+                  <small>{p.sku} · {p.categoryName}</small>
                   {!p.active && <span className="badge badge-off">Archivado</span>}
                 </td>
-                <td className="muted">{p.categoryName}</td>
-                <td className="muted">{p.supplierName ?? '—'}</td>
-                <td className="num">{p.unitPrice != null ? currency.format(p.unitPrice) : '—'}</td>
-                <td className="num">
-                  <span className={`badge ${p.lowStock ? 'badge-warn' : 'badge-ok'}`}>
-                    {p.stock} {p.unit}
-                  </span>
-                  <small className="muted"> / mín {p.minStock}</small>
-                </td>
+                <td><div className="availability"><div><span className="cell-label">Estado</span><span className="muted">{!p.active ? 'Archivado' : p.lowStock ? 'Stock bajo' : 'Disponible'}</span><small className="muted">Mínimo: {p.minStock} {p.unit}</small></div><span className={`stock-gauge${p.lowStock ? ' stock-gauge-low' : ''}`} role="img" aria-label={p.lowStock ? 'Stock bajo' : 'Stock suficiente'} /></div></td>
+                <td><span className="cell-label">Existencias</span><span className={`stock-number${p.lowStock ? ' stock-warning' : ''}`}>◇ {p.stock} <small>{p.unit}</small></span></td>
+                <td><span className="cell-label">Precio unitario</span>{p.unitPrice != null ? currency.format(p.unitPrice) : 'Sin precio'}<small className="product-supplier muted">{p.supplierName ?? 'Sin proveedor'}</small></td>
                 <td className="col-actions">
                   <button className="btn btn-sm btn-primary" onClick={() => setMovementFor(p)}>
                     Movimiento
@@ -229,7 +231,7 @@ export function ProductsView() {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table></div>
       )}
 
       {pageData && totalPages > 1 && (

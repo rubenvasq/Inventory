@@ -4,6 +4,10 @@ import './index.css'
 import App from './App.tsx'
 import { AuthProvider } from './auth/AuthContext'
 import { ToastProvider } from './components/Toast'
+import { applyTheme, initialTheme } from './theme'
+
+// Aplicar el tema antes del primer render para evitar un destello claro.
+applyTheme(initialTheme())
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

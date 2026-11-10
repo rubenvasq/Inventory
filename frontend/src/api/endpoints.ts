@@ -6,6 +6,7 @@ import type {
   Category,
   CategoryRequest,
   CategoryStockReport,
+  ChangePasswordRequest,
   CreateUserRequest,
   DashboardSummary,
   LoginRequest,
@@ -23,6 +24,7 @@ import type {
   ProjectRequest,
   Supplier,
   SupplierRequest,
+  UpdateProfileRequest,
   UpdateUserRequest,
 } from './types'
 
@@ -41,6 +43,13 @@ function query(filters: Record<string, unknown>): string {
 export const authApi = {
   login: (body: LoginRequest) => http.post<AuthUser>('/auth/login', body),
   me: () => http.get<AuthUser>('/auth/me'),
+}
+
+/** Perfil del usuario autenticado (disponible para ADMIN y OPERADOR). */
+export const profileApi = {
+  get: () => http.get<AppUser>('/profile'),
+  update: (body: UpdateProfileRequest) => http.put<AppUser>('/profile', body),
+  changePassword: (body: ChangePasswordRequest) => http.put<AppUser>('/profile/password', body),
 }
 
 export const usersApi = {

@@ -217,6 +217,17 @@ export interface UpdateUserRequest {
   password?: string | null
 }
 
+/** Perfil propio: solo el nombre completo (usuario y rol los gestiona ADMIN). */
+export interface UpdateProfileRequest {
+  fullName: string
+}
+
+/** Cambio de contrasena propia: exige la actual para autorizar el cambio. */
+export interface ChangePasswordRequest {
+  currentPassword: string
+  newPassword: string
+}
+
 export interface DashboardSummary {
   totalProducts: number
   totalCategories: number

@@ -1,11 +1,16 @@
 import { useState } from 'react'
 import './App.css'
+import './Kanban.css'
+import { DesignIcon } from './components/DesignIcon'
+import { UserProfileMenu } from './components/UserProfileMenu'
 import { useAuth } from './auth/AuthContext'
+import { useTheme } from './theme'
 import { CategoriesView } from './views/CategoriesView'
 import { DashboardView } from './views/DashboardView'
 import { LoginView } from './views/LoginView'
 import { MovementsView } from './views/MovementsView'
 import { ProductsView } from './views/ProductsView'
+import { ProfileView } from './views/ProfileView'
 import { ProjectsView } from './views/ProjectsView'
 import { SuppliersView } from './views/SuppliersView'
 import { UsersView } from './views/UsersView'
@@ -31,6 +36,11 @@ const TABS: TabDef[] = [
 function App() {
   const { user, loading, logout, isAdmin } = useAuth()
   const [tab, setTab] = useState<Tab>('dashboard')
+  const [globalSearch, setGlobalSearch] = useState('')
+  const [productSearch, setProductSearch] = useState('')
+  const [lowStockView, setLowStockView] = useState(false)
+  const [profileOpen, setProfileOpen] = useState(false)
+  const [theme, setTheme] = useTheme()
 
   if (loading) {
     return <div className="login-screen"><span className="spinner" />Cargando…</div>
@@ -48,20 +58,17 @@ function App() {
     <div className="app">
       <aside className="sidebar">
         <div className="brand">
-          <span className="brand-mark">KX</span>
-          <div>
-            <strong>Kardex</strong>
-            <small>DOMIO</small>
-          </div>
+          <img className="app-logo kardex-wordmark" src="/design/kardex-logo.png" alt="Kardex" width="2172" height="724" />
         </div>
-        <nav>
+        <nav aria-label="Navegación principal">
           {tabs.map((t) => (
             <button
               key={t.id}
               className={`nav-item${activeTab === t.id ? ' active' : ''}`}
+              aria-current={activeTab === t.id ? 'page' : undefined}
               onClick={() => setTab(t.id)}
             >
-              {t.label}
+              <DesignIcon name={{ dashboard: 'home', products: 'inventory', categories: 'categories', suppliers: 'suppliers', movements: 'purchase', projects: 'quantity', users: 'suppliers' }[t.id]} />{t.label}
             </button>
           ))}
         </nav>
@@ -71,22 +78,32 @@ function App() {
             <small className="muted">{user.role}</small>
           </div>
           <button className="btn btn-sm" onClick={logout}>
-            Cerrar sesión
+            <DesignIcon name="logout" />Cerrar sesión
           </button>
         </div>
       </aside>
 
+      <div className="main-workspace">
+        <header className="topbar">
+          <form className="global-search" onSubmit={e => { e.preventDefault(); setProductSearch(globalSearch); setLowStockView(false); setTab('products') }}>
+            <DesignIcon name="search" />
+            <input aria-label="Buscar productos" placeholder="Buscar producto por nombre o SKU" value={globalSearch} onChange={e => setGlobalSearch(e.target.value)} />
+          </form>
+          <div className="topbar-user"><button className="notification-button" aria-label="Ver productos con stock bajo" onClick={() => { setGlobalSearch(''); setProductSearch(''); setLowStockView(true); setTab('products') }}><DesignIcon name="bell" /></button><UserProfileMenu user={user} theme={theme} onToggleTheme={() => setTheme(theme === 'dark' ? 'light' : 'dark')} onOpenProfile={() => setProfileOpen(true)} onLogout={logout} /></div>
+        </header>
       <main className="content">
         <div className="view-anim" key={activeTab}>
-          {activeTab === 'dashboard' && <DashboardView />}
-          {activeTab === 'products' && <ProductsView />}
+          {activeTab === 'dashboard' && <DashboardView onProducts={(low = false) => { setGlobalSearch(''); setProductSearch(''); setLowStockView(low); setTab('products') }} />}
+          {activeTab === 'products' && <ProductsView key={`${productSearch}:${lowStockView}`} initialSearch={productSearch} initialLowStock={lowStockView} />}
           {activeTab === 'categories' && <CategoriesView />}
           {activeTab === 'suppliers' && <SuppliersView />}
           {activeTab === 'movements' && <MovementsView />}
           {activeTab === 'projects' && <ProjectsView />}
           {activeTab === 'users' && <UsersView />}
         </div>
-      </main>
+        </main>
+        {profileOpen && <ProfileView onClose={() => setProfileOpen(false)} />}
+      </div>
     </div>
   )
 }
