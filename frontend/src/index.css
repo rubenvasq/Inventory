@@ -1,18 +1,20 @@
 :root {
-  --bg: #0f1115;
-  --surface: #171a21;
-  --surface-2: #1e222b;
-  --border: #2a2f3a;
-  --text: #e6e8ee;
-  --muted: #9aa3b2;
-  --primary: #d97757;
-  --primary-hover: #e08a6e;
+  /* Tema claro basado en el diseño "Inventory Management Dashboard":
+     fondo gris-azulado claro, tarjetas blancas y azul como color de acento. */
+  --bg: #f5f7fa;
+  --surface: #ffffff;
+  --surface-2: #eef1f6;
+  --border: #e2e6ee;
+  --text: #22252b;
+  --muted: #63666e;
+  --primary: #1e6ede;
+  --primary-hover: #1b61c7;
   --danger: #e5484d;
   --ok: #30a46c;
   --warn: #e2a336;
   --radius: 10px;
 
-  color-scheme: dark;
+  color-scheme: light;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
   color: var(--text);
   background: var(--bg);
@@ -63,7 +65,7 @@ textarea {
   width: 100%;
   padding: 8px 10px;
   color: var(--text);
-  background: var(--surface-2);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
   outline: none;
@@ -79,7 +81,7 @@ input:focus,
 select:focus,
 textarea:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(217, 119, 87, 0.18);
+  box-shadow: 0 0 0 3px rgba(30, 110, 222, 0.15);
 }
 
 textarea {
