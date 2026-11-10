@@ -50,6 +50,23 @@
 .login-identity .kardex-login-brand { width:min(420px,85%); height:auto; object-fit:contain; }
 .login-heading .kardex-login-logo { width:180px; max-width:100%; height:auto; object-fit:contain; }
 
+.kanban-login { background:var(--surface); position:relative; isolation:isolate; }
+.login-identity { position:relative; padding:64px 40px; margin:0 32px; border-radius:32px; min-height:620px; justify-content:center; overflow:hidden; background:radial-gradient(ellipse at 10% 10%,#5ac6ef25,transparent 60%),radial-gradient(ellipse at 95% 90%,#8472ef20,transparent 60%),linear-gradient(140deg,#f4f9ff,#eef3fc); border:1px solid #e1eaf5; }
+.login-identity::before { content:''; position:absolute; inset:0; z-index:-1; background-image:radial-gradient(#3973bb22 1px,transparent 1px); background-size:22px 22px; mask-image:linear-gradient(to bottom,black,transparent); }
+.login-identity .kardex-login-brand { filter:drop-shadow(0 8px 12px #204a7914); }
+.login-brand-story { max-width:370px; text-align:center; }
+.login-brand-story .login-story-label { font-size:10px; letter-spacing:2.5px; color:#577ca9; font-weight:600; }
+.login-brand-story h2 { font-size:36px; line-height:1.2; letter-spacing:-1.2px; color:#243e60; margin:20px 0 16px; font-weight:600; }
+.login-brand-story p { font-size:15px; line-height:25px; color:#6b7f98; margin:0; }
+.login-capabilities { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-top:28px; }
+.login-brand-story .login-capabilities span { font-size:11px; line-height:18px; padding:7px 12px; color:#4b6c93; border:1px solid #d5e1ef; border-radius:20px; background:#ffffff80; }
+[data-theme='dark'] .login-identity { background:radial-gradient(ellipse at top left,#27456b60,transparent 70%),var(--surface-2); border-color:var(--border); }
+[data-theme='dark'] .login-brand-story h2 { color:var(--text); }
+[data-theme='dark'] .login-brand-story p { color:var(--muted); }
+[data-theme='dark'] .login-brand-story .login-capabilities span { color:var(--text); border-color:var(--border); background:var(--surface); }
+@media(max-width:1100px) { .login-identity { margin:0 20px; padding:40px 24px; } .login-brand-story h2 { font-size:30px; } }
+@media(max-width:700px) { .login-identity { display:none; } }
+
 /* ===== Modo oscuro (data-theme="dark" en <html>) ===== */
 [data-theme='dark'] .kanban-login { background: var(--surface); color: var(--text); }
 [data-theme='dark'] .login-heading h1 { color: var(--text); }

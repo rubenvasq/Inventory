@@ -1,0 +1,33 @@
+.product-photo { position:relative; display:grid; place-items:center; flex-shrink:0; padding:6px; border:1px solid var(--border); border-radius:14px; background:linear-gradient(145deg,var(--surface),var(--surface-2)); overflow:hidden; box-shadow:0 3px 10px #10234508; }
+.product-photo img { display:block; width:100%; height:100%; object-fit:contain; border-radius:8px; transition:transform .2s; }
+.product-photo:hover img { transform:scale(1.07); }
+.product-photo:focus-visible { outline:3px solid var(--primary); outline-offset:3px; }
+.product-photo-fallback { display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:100%; color:var(--primary); }
+.product-photo-fallback svg { width:75%; height:75%; }
+.product-photo-fallback>span { font-size:8px; line-height:12px; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.photo-zoom { position:absolute; right:2px; bottom:2px; width:16px; height:16px; border-radius:5px; background:var(--surface); color:var(--primary); font-size:12px; opacity:0; }
+.product-photo:hover .photo-zoom,.product-photo:focus-visible .photo-zoom { opacity:1; }
+.product-photo-preview { display:grid; place-items:center; min-height:240px; background:var(--surface-2); border-radius:16px; padding:24px; }
+.product-photo-preview img { max-width:100%; max-height:60vh; object-fit:contain; }
+.photo-caption { color:var(--muted); font-size:13px; }
+.chart-insight { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }
+.chart-insight>div { display:flex; flex-direction:column; gap:5px; }
+.chart-insight span { font-size:12px; color:var(--muted); }
+.chart-insight strong { font-size:25px; font-weight:600; letter-spacing:-.6px; color:var(--text); }
+.chart-count { padding:6px 10px; background:var(--surface-2); border:1px solid var(--border); border-radius:20px; white-space:nowrap; }
+.inventory-bars { width:100%; height:auto; display:block; color:var(--muted); }
+.category-chips { display:flex; gap:7px; flex-wrap:wrap; margin-top:8px; }
+.category-chips button { display:flex; align-items:center; gap:6px; border:1px solid var(--border); padding:5px 9px; border-radius:20px; color:var(--muted); background:var(--surface); font-size:11px; }
+.category-chips button[aria-pressed='true'] { color:var(--primary); border-color:var(--primary); background:var(--surface-2); }
+.category-chips i { width:7px; height:7px; border-radius:50%; }
+.chart-detail { display:flex; justify-content:space-between; gap:12px; padding:12px 14px; margin-top:14px; border-radius:10px; background:var(--surface-2); font-size:12px; color:var(--muted); }
+.chart-detail strong { color:var(--text); }
+.inventory-dashboard .summary-card { border:1px solid var(--border); box-shadow:0 4px 20px #10234505; }
+.inventory-dashboard .metric-icon { width:44px; height:44px; border-radius:13px; box-shadow:inset 0 1px 0 #ffffff80; margin-bottom:10px; }
+.inventory-dashboard .summary-metric strong { font-size:19px; font-variant-numeric:tabular-nums; }
+.inventory-dashboard .health-chart { min-height:254px; background:radial-gradient(ellipse at center,#4488f509,transparent 68%); }
+.inventory-dashboard .health-donut { width:218px; height:218px; box-shadow:0 10px 30px #4488f518; border:6px solid var(--surface); outline:1px solid var(--border); }
+.inventory-dashboard .health-donut>div { width:163px; height:163px; background:var(--surface); box-shadow:inset 0 2px 14px #10234508; }
+.inventory-dashboard .health-donut strong { font-size:38px; letter-spacing:-1.5px; }
+.inventory-dashboard .health-legend>span { padding:9px 12px; border-radius:9px; background:var(--surface-2); }
+@media(max-width:600px) { .chart-insight strong { font-size:21px; } .chart-detail { flex-direction:column; gap:4px; } .inventory-dashboard .summary-metric strong { font-size:16px; } .inventory-bars { min-height:190px; } }

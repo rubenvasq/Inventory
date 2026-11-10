@@ -13,34 +13,14 @@ import type {
   Supplier,
 } from '../api/types'
 import { Field } from '../components/Field'
+import { ProductPhoto } from '../components/ProductPhoto'
+import { StockGauge } from '../components/StockGauge'
+import { stockLevel, summarizeStock } from '../components/stockLevel'
 import { Modal } from '../components/Modal'
 import { useToast } from '../components/Toast'
 
 const currency = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' })
 const PAGE_SIZE = 20
-
-/** Miniatura del producto con respaldo cuando no hay imagen o falla la carga. */
-function ProductThumb({ product, size = 44 }: { product: Product; size?: number }) {
-  const [failed, setFailed] = useState(false)
-  const style = { width: size, height: size }
-  if (!product.imageUrl || failed) {
-    return (
-      <span className="thumb thumb-placeholder" style={style} aria-hidden>
-        {product.name.charAt(0).toUpperCase()}
-      </span>
-    )
-  }
-  return (
-    <img
-      className="thumb"
-      style={style}
-      src={product.imageUrl}
-      alt={product.name}
-      loading="lazy"
-      onError={() => setFailed(true)}
-    />
-  )
-}
 
 export function ProductsView({ initialSearch = '', initialLowStock = false }: { initialSearch?: string; initialLowStock?: boolean }) {
   const toast = useToast()
@@ -50,6 +30,7 @@ export function ProductsView({ initialSearch = '', initialLowStock = false }: { 
   const [categories, setCategories] = useState<Category[]>([])
   const [suppliers, setSuppliers] = useState<Supplier[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadFailed, setLoadFailed] = useState(false)
   const [searchFilter, setSearchFilter] = useState(initialSearch)
   const [categoryFilter, setCategoryFilter] = useState<number | ''>('')
   const [lowStockOnly, setLowStockOnly] = useState(initialLowStock)
@@ -62,6 +43,7 @@ export function ProductsView({ initialSearch = '', initialLowStock = false }: { 
 
   const load = (targetPage = page) => {
     setLoading(true)
+    setLoadFailed(false)
     productsApi
       .search({
         search: searchFilter || undefined,
@@ -74,7 +56,7 @@ export function ProductsView({ initialSearch = '', initialLowStock = false }: { 
         setItems(result.content)
         setPageData(result)
       })
-      .catch((e) => toast.error(errorMessage(e)))
+      .catch((e) => { setLoadFailed(true); toast.error(errorMessage(e)) })
       .finally(() => setLoading(false))
   }
 
@@ -124,6 +106,7 @@ export function ProductsView({ initialSearch = '', initialLowStock = false }: { 
 
   const openForm = creating || editing !== null
   const totalPages = pageData?.totalPages ?? 0
+  const stockSummary = summarizeStock(items)
 
   return (
     <section className="products-view">
@@ -141,7 +124,11 @@ export function ProductsView({ initialSearch = '', initialLowStock = false }: { 
         <div className="product-stat-grid">
           <div><span>Productos encontrados</span><strong>{loading ? '—' : (pageData?.totalElements ?? 0).toLocaleString('es-CO')} <small>productos</small></strong></div>
           <div><span>Categorías disponibles</span><strong>{categories.length} <small>categorías</small></strong></div>
-          <div><span>Estado de stock · esta página</span><strong className="health-stat"><span className="mini-gauge" aria-hidden="true" />{loading ? '—' : items.some(p => p.lowStock) ? 'Por revisar' : items.length ? 'Saludable' : 'Sin datos'}</strong></div>
+          <div className={`stock-summary stock-summary-${stockSummary.tone}`}>
+            <span>Estado de stock · esta página</span>
+            <strong className="health-stat" role="status"><span className="stock-health-dot" aria-hidden="true" />{loading ? 'Cargando…' : loadFailed ? 'No disponible' : stockSummary.status}</strong>
+            {!loading && !loadFailed && stockSummary.total > 0 && <small className="stock-health-detail">{stockSummary.healthy}/{stockSummary.total} con stock suficiente ({stockSummary.percent}%){stockSummary.empty > 0 && stockSummary.low > 0 ? ` · ${stockSummary.low} con stock bajo` : ''}</small>}
+          </div>
           <div><span>Unidades · esta página</span><strong>{loading ? '—' : items.reduce((total, p) => total + p.stock, 0).toLocaleString('es-CO')} <small>unidades</small></strong></div>
         </div>
       </div>
@@ -197,14 +184,14 @@ export function ProductsView({ initialSearch = '', initialLowStock = false }: { 
             {items.map((p) => (
               <tr key={p.id} className={p.active ? undefined : 'row-inactive'}>
                 <td className="col-thumb">
-                  <ProductThumb product={p} />
+                  <ProductPhoto key={`${p.id}-${p.imageUrl}`} product={p} />
                 </td>
                 <td className="product-identity">
                   <strong>{p.name}</strong>
                   <small>{p.sku} · {p.categoryName}</small>
                   {!p.active && <span className="badge badge-off">Archivado</span>}
                 </td>
-                <td><div className="availability"><div><span className="cell-label">Estado</span><span className="muted">{!p.active ? 'Archivado' : p.lowStock ? 'Stock bajo' : 'Disponible'}</span><small className="muted">Mínimo: {p.minStock} {p.unit}</small></div><span className={`stock-gauge${p.lowStock ? ' stock-gauge-low' : ''}`} role="img" aria-label={p.lowStock ? 'Stock bajo' : 'Stock suficiente'} /></div></td>
+                <td><div className="availability"><div><span className="cell-label">Estado</span><span className="muted">{stockLevel(p.stock, p.minStock, p.active).status}</span><small className="muted">Mínimo: {p.minStock} {p.unit}</small></div><StockGauge stock={p.stock} minStock={p.minStock} active={p.active} unit={p.unit} /></div></td>
                 <td><span className="cell-label">Existencias</span><span className={`stock-number${p.lowStock ? ' stock-warning' : ''}`}>◇ {p.stock} <small>{p.unit}</small></span></td>
                 <td><span className="cell-label">Precio unitario</span>{p.unitPrice != null ? currency.format(p.unitPrice) : 'Sin precio'}<small className="product-supplier muted">{p.supplierName ?? 'Sin proveedor'}</small></td>
                 <td className="col-actions">

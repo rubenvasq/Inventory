@@ -127,3 +127,24 @@
 [data-theme='dark'] .tag-status-progress{color:#7fabff}
 [data-theme='dark'] .modal-backdrop{background:rgba(5,8,14,.62)}
 
+.stock-indicator { position:relative; display:inline-block; width:52px; height:30px; flex-shrink:0; color:#5fa76a; }
+.stock-indicator svg { display:block; width:52px; height:30px; overflow:visible; }
+.stock-indicator path { fill:none; stroke-width:6; }
+.stock-indicator-track { stroke:#e5e9e4; }
+.stock-indicator-fill { stroke:currentColor; transition:stroke-dasharray .3s ease,stroke .3s ease; }
+.stock-indicator-low { color:#c4a260; }
+.stock-indicator-empty { color:#d65454; }
+.stock-indicator-empty .stock-indicator-track { stroke:#f2d4d4; }
+.stock-indicator-inactive { color:#9299a3; }
+.stock-indicator .stock-indicator-minimum { stroke:var(--text); stroke-width:1.5; }
+.stock-indicator-tooltip { display:none; position:absolute; z-index:10; right:0; top:calc(100% + 8px); width:230px; padding:10px 12px; background:var(--surface); color:var(--text); border:1px solid var(--border); border-radius:6px; box-shadow:0 4px 16px #0002; font-size:11px; line-height:1.6; }
+.stock-indicator:hover .stock-indicator-tooltip,.stock-indicator:focus .stock-indicator-tooltip { display:block; }
+[data-theme='dark'] .stock-indicator-track { stroke:#333b4a; }
+[data-theme='dark'] .stock-indicator-empty .stock-indicator-track { stroke:#703b40; }
+@media(prefers-reduced-motion:reduce) { .stock-indicator-fill { transition:none; } }
+.product-stat-grid .stock-summary .health-stat { font-size:19px; color:var(--text); }
+.stock-health-dot { width:10px; height:10px; background:#5fa76a; border-radius:50%; flex-shrink:0; }
+.stock-summary-empty .stock-health-dot { background:#d65454; }
+.stock-summary-low .stock-health-dot { background:#c4a260; }
+.stock-summary-inactive .stock-health-dot { background:#9299a3; }
+.stock-health-detail { font-size:10px; line-height:1.5; color:var(--muted); }

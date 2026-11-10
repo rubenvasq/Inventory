@@ -32,6 +32,7 @@ export function LoginView() {
     <main className="kanban-login">
       <div className="login-identity" aria-label="Kardex">
         <img className="kardex-login-brand" src="/design/kardex-logo.png" alt="Kardex" width="2172" height="724" />
+        <div className="login-brand-story"><span className="login-story-label">TU INVENTARIO, CONECTADO</span><h2>Cada producto.<br />Todo bajo control.</h2><p>Organiza tus existencias, consulta movimientos y encuentra lo que necesitas en un solo lugar.</p><div className="login-capabilities"><span>◈ Inventario</span><span>↗ Movimientos</span><span>▦ Reportes</span></div></div>
       </div>
       <section className="login-content" aria-labelledby="login-title">
         <header className="login-heading">
