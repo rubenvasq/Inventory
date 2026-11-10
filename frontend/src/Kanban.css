@@ -109,8 +109,15 @@
 [data-theme='dark'] .stock-warning{color:#d9a959}
 [data-theme='dark'] .filter-search{background:var(--surface)}
 
-/* Botones (la base clara trae fondo blanco fijo) */
+/* Botones (la base clara trae fondo blanco fijo). Las variantes se
+   re-declaran porque la regla .btn oscura (especificidad 0,2,0) pisa
+   .btn-primary y .btn-danger del tema claro (0,1,0). */
 [data-theme='dark'] .btn{background:var(--surface-2);border-color:var(--border);color:var(--text)}
+[data-theme='dark'] .btn:hover{border-color:var(--muted)}
+[data-theme='dark'] .btn-primary{background:var(--primary);border-color:var(--primary);color:#fff}
+[data-theme='dark'] .btn-primary:hover{background:var(--primary-hover);border-color:var(--primary-hover);color:#fff}
+[data-theme='dark'] .btn-danger{color:var(--danger)}
+[data-theme='dark'] .btn-danger:hover{border-color:var(--danger);color:var(--danger)}
 
 /* Medidores de stock: los gradientes traen marcas blancas fijas */
 [data-theme='dark'] .stock-gauge{background:repeating-conic-gradient(from 270deg at 50% 100%,transparent 0deg 4deg,#12141a 4deg 7deg),conic-gradient(from 270deg at 50% 100%,#5fa76a 0deg 145deg,#333b4a 145deg 180deg,transparent 180deg)}
